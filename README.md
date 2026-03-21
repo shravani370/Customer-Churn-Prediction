@@ -110,3 +110,31 @@ This project demonstrates how machine learning can be used to **analyze customer
 ## 📌 Author
 
 * Shravani Kharwadkar
+# Customer Churn Intelligence System
+
+## 🚀 Overview
+An end-to-end machine learning system to predict customer churn and provide actionable retention strategies.
+
+## 🔥 Features
+- Churn Prediction using XGBoost
+- Explainable AI (SHAP)
+- Streamlit Web App
+- FastAPI Backend
+- Business Recommendation Engine
+
+## 📊 Tech Stack
+Python, Scikit-learn, XGBoost, SHAP, Streamlit, FastAPI
+
+## 💡 Business Impact
+Helps companies identify high-risk customers and take preventive actions, reducing revenue loss.
+
+## ▶️ Run Project
+
+### Train Model
+python src/train.py
+
+### Run App
+streamlit run app/app.py
+
+### Run API
+uvicorn app.api:app --reload
