@@ -1,53 +1,28 @@
-import joblib
 import pandas as pd
-
+import joblib
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
+from sklearn.metrics import accuracy_score
 
-from preprocess import load_data, preprocess
+# Load dataset
+df = pd.read_csv("data/churn.csv")
 
-# -------------------------------
-# 1. Load and preprocess data
-# -------------------------------
-df = load_data("data/churn.csv")
-X, y = preprocess(df)
+# Preprocessing
+X = df.drop(columns=["Churn"])
+y = LabelEncoder().fit_transform(df["Churn"])  # 0/1
 
-# -------------------------------
-# 2. Train-test split
-# -------------------------------
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
-)
+# Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# -------------------------------
-# 3. Model (Optimized XGBoost)
-# -------------------------------
-model = XGBClassifier(
-    n_estimators=200,
-    max_depth=5,
-    learning_rate=0.1,
-    subsample=0.8,
-    colsample_bytree=0.8,
-    eval_metric="logloss",
-    random_state=42
-)
-
-# Train
+# Train XGBoost model
+model = XGBClassifier(use_label_encoder=False, eval_metric='logloss')
 model.fit(X_train, y_train)
 
-# -------------------------------
-# 4. Evaluation
-# -------------------------------
+# Evaluate
 y_pred = model.predict(X_test)
-
 print("Accuracy:", accuracy_score(y_test, y_pred))
-print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
-# -------------------------------
-# 5. Save model + feature names
-# -------------------------------
+# Save model and features
 joblib.dump(model, "models/model.pkl")
 joblib.dump(X.columns.tolist(), "models/features.pkl")
-
-print("\nModel and features saved successfully ✅")
